@@ -2,14 +2,14 @@ import { Server } from "socket.io";
 import { socketContoller } from "../controllers/socket.controller.js";
 
 export class soketIO {
-  socketContoller = new socketContoller()
+  socketContoller = new socketContoller();
   soketConnection(server) {
     const io = new Server(server, {
       cors: {
-        origin: ["http://localhost:4200","http://localhost:5200"],
+        origin: [process.env.MAINAPPURL, process.env.DEVURL],
         methods: ["GET", "POST"],
       },
     });
-    this.socketContoller.socketMethods(io)
+    this.socketContoller.socketMethods(io);
   }
 }
