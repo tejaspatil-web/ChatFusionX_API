@@ -4,11 +4,10 @@ export class connection {
     const username = process.env.USER;
     const password = process.env.PASSWORD;
     const clusterName = process.env.CLUSTERNAME;
-    
-    const connectionString = `mongodb+srv://${username}:${password}@${clusterName}.el7ojsj.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`
+    const dbName = process.env.DBNAME;
 
-    mongoose
-      .connect(connectionString)
+    const connectionString = `mongodb+srv://${username}:${password}@${clusterName}.el7ojsj.mongodb.net/${dbName}?retryWrites=true&w=majority&appName=Cluster0`;
+    mongoose.connect(connectionString)
       .then(() => {
         console.log("Connected to MongoDB Atlas");
       })
