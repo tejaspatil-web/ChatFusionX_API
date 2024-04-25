@@ -29,19 +29,6 @@ soketConnection.soketConnection(server);
 app.use("/api/user", userRoute);
 
 
-// Handler function for Netlify function
-export async function handler(event, context) {
-  return new Promise((resolve, reject) => {
-    server(event, context, (err) => {
-      if (err) {
-        console.error(err);
-        reject(err);
-      }
-      resolve();
-    });
-  });
-}
-
 server.listen(8080, () => {
   console.log("server is running on port 8080");
 });
