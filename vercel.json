@@ -1,5 +1,28 @@
 {
   "version": 2,
-  "builds": [{ "src": "server.js", "use": "@vercel/node" }],
-  "routes": [{ "src": "/(.*)", "dest": "/server.js" }]
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/user/username/:username",
+      "dest": "/api/user/username.js"
+    },
+    {
+      "src": "/api/user/getChatHistory",
+      "dest": "/api/user/getChatHistory.js"
+    },
+    {
+      "src": "/api/user/(.*)",
+      "dest": "/api/user/index.js"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/server.js"
+    }
+  ]
 }
+
