@@ -1,0 +1,5 @@
+[[redirects]]
+  from = "/socket.io/*"
+  to = "/.netlify/functions/socketio/:splat"
+  status = 200
+  force = true
