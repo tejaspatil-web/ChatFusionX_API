@@ -1,10 +1,10 @@
-import { Chat, User } from "../models/chat.model.js";
+import { ChatFusionX, User } from "../models/chat.model.js";
 
 async function getChatHistory(req, res) {
   try {
     const userId = req.params.id;
     const adminId = process.env.ADMINID;
-    const chatHistory = await Chat.find({}, "-__v");
+    const chatHistory = await ChatFusionX.find({}, "-__v");
     if (adminId === userId) {
       const modifiedChatHistory = chatHistory.map((chat) => ({
         ...chat.toObject(),
@@ -22,7 +22,7 @@ async function getChatHistory(req, res) {
 
 async function saveChatHistory(userName, userId, userMessage, time) {
   try {
-    const chat = new Chat({
+    const chat = new ChatFusionX({
       userName: userName,
       userId: userId,
       userMessage: userMessage,
@@ -63,7 +63,7 @@ async function updateUserName(req, res) {
     await User.updateOne({ _id: userId }, { userName: updateUserName }).then(
       (result) => {
         if (result.modifiedCount > 0) {
-          Chat.updateMany(
+          ChatFusionX.updateMany(
             { userId: userId },
             { $set: { userName: updateUserName } }
           ).then((result) => {
@@ -93,7 +93,7 @@ async function deleteChat(req, res) {
     const userId = req.params.userId;
     const adminId = process.env.ADMINID;
     if (userId === adminId) {
-      await Chat.deleteOne({ _id: chatId }).then((result) => {
+      await ChatFusionX.deleteOne({ _id: chatId }).then((result) => {
         if (result) {
           res.status(200).json({ message: "Chat deleted successfully" });
         } else {
