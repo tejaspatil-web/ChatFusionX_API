@@ -17,15 +17,25 @@ export class socketContoller {
             socket.username = user.userName;
             user.groups.forEach((group) => {
               socket.join(group.groupId.toString());
-              socket.emit("groupsDeatils", {
-                groupId: group.groupId,
-                groupName: group.groupName,
-                count: group.unreadCount,
-              });
             });
           } catch (error) {
             console.error("Error during login:", error);
             socket.emit("error", "An error occurred during login");
+          }
+        });
+
+        socket.on("groupList", async (userId) => {
+          try {
+            let user = await User.findById(userId);
+            if (!user) {
+              throw new Error("User not found");
+            }
+            socket.emit("getGroupsList", {
+              groupDetails: user.groups,
+            });
+          } catch (error) {
+            console.error("Error getting group list:", error);
+            socket.emit("error", "An error occurred during getting group list");
           }
         });
 
@@ -62,37 +72,37 @@ export class socketContoller {
           }
         });
 
-        socket.on("joinGroup", async (groupId, userId) => {
-          try {
-            let group = await Group.findOne({ groupId: groupId });
-            if (group) {
-              if (!group.members.includes(userId)) {
-                group.members.push(userId);
-                await group.save();
+        // this code may be use in future
+        // socket.on("joinGroup", async (groupId, userId) => {
+        //   try {
+        //     let group = await Group.findOne({ groupId: groupId });
+        //     if (group) {
+        //       if (!group.members.includes(userId)) {
+        //         group.members.push(userId);
+        //         await group.save();
 
-                const user = await User.findById(userId);
-                user.groups.push({
-                  groupId: group._id,
-                  groupName: group.name,
-                  unreadCount: 0,
-                });
-                await user.save();
-              }
-              socket.join(group._id.toString());
-              // this code may be use in future
-              // io.to(group._id.toString()).emit(
-              //   "newMember",
-              //   `A new member has joined ${group.name}`
-              // );
-              console.log(`A new member has joined ${group.name}`);
-            } else {
-              socket.emit("error", "Group does not exist");
-            }
-          } catch (error) {
-            console.error("Error joining group:", error);
-            socket.emit("error", "An error occurred while joining the group");
-          }
-        });
+        //         const user = await User.findById(userId);
+        //         user.groups.push({
+        //           groupId: group._id,
+        //           groupName: group.name,
+        //           unreadCount: 0,
+        //         });
+        //         await user.save();
+        //       }
+        //       socket.join(group._id.toString());
+        //       // io.to(group._id.toString()).emit(
+        //       //   "newMember",
+        //       //   `A new member has joined ${group.name}`
+        //       // );
+        //       console.log(`A new member has joined ${group.name}`);
+        //     } else {
+        //       socket.emit("error", "Group does not exist");
+        //     }
+        //   } catch (error) {
+        //     console.error("Error joining group:", error);
+        //     socket.emit("error", "An error occurred while joining the group");
+        //   }
+        // });
 
         socket.on("getGroupMessages", async (groupId) => {
           try {
@@ -180,7 +190,7 @@ export class socketContoller {
                     unreadCount: 0,
                   });
                   await userToInvite.save();
-
+                  socket.join(groupId);
                   socket.join(userId);
                   io.to(userId).emit("newMember", {
                     message: `User ${userName} has been added to ${group.name}`,
@@ -217,7 +227,7 @@ export class socketContoller {
               socket.emit("unreadCount", {
                 groupId: groupId,
                 groupName: groupInfo.groupName,
-                count: 0,
+                unreadCount: 0,
               });
             } else {
               socket.emit("error", "Group not found in user's groups");
