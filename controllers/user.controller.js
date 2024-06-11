@@ -1,4 +1,5 @@
 import { User } from "../models/user.model.js";
+import { ChatFusionX } from "../models/chat.model.js";
 
 async function getUserId(req, res) {
   try {
