@@ -1,5 +1,7 @@
 import { saveChatHistory } from "./chat.controller.js";
-import { User, Group, Chat } from "../models/chat.model.js";
+import { Chat } from "../models/chat.model.js";
+import { User } from "../models/user.model.js";
+import { Group } from "../models/group.model.js";
 
 export class socketContoller {
   socketMethods(io) {
