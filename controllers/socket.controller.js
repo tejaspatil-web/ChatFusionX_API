@@ -41,6 +41,24 @@ export class socketContoller {
           }
         });
 
+        socket.on("groupCount", async (userId) => {
+          try {
+            let user = await User.findById(userId);
+            if (!user) {
+              throw new Error("User not found");
+            }
+            socket.emit("getGroupsCount", {
+              groupsCount: user.groups.length,
+            });
+          } catch (error) {
+            console.error("Error getting group count:", error);
+            socket.emit(
+              "error",
+              "An error occurred during getting group count"
+            );
+          }
+        });
+
         socket.on("createGroup", async (groupName, userId) => {
           try {
             let group = new Group({
