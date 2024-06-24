@@ -7,6 +7,7 @@ import { connection } from "./connection/db.connection.js";
 import { soketIO } from "./connection/socket.connection.js";
 import chatRoute from "./routes/chat.route.js";
 import userRoute from "./routes/user.route.js";
+import genAiRoute from "./routes/ai.route.js";
 
 // Dot env Configuration
 dotenv.config();
@@ -31,6 +32,9 @@ app.use("/api/chat", chatRoute);
 
 // This Route Use For Manage User Details
 app.use("/api/user", userRoute);
+
+// This Route Use For Genrative AI
+app.use("/api/genai", genAiRoute);
 
 server.listen(8080, () => {
   console.log("server is running on port 8080");
