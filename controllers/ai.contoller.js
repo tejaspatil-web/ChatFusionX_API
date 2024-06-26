@@ -5,7 +5,7 @@ async function getAiResponse(req, res) {
     const prompt = req.body.prompt;
     const generativeAIModel = new googleGenerativeAI();
     const model = generativeAIModel.generativeAIConnection();
-    const result = await model.generateContent(prompt);
+    const result = await model.generateContentStream(prompt);
     const response = await result.response;
     const text = response.text();
     res.status(200).json(text);
